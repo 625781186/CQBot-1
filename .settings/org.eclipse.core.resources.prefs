@@ -1,5 +1,5 @@
 eclipse.preferences.version=1
-encoding//cqbot/__init__.py=utf-8
-encoding//cqbot/model.py=utf-8
-encoding//cqbot/skylark.py=utf-8
-encoding/botserver.py=utf-8
+encoding/BotConfig.py=utf-8
+encoding/BotHandler.py=utf-8
+encoding/BotModel.py=utf-8
+encoding/BotServer.py=utf-8
