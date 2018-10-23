@@ -97,6 +97,31 @@ class BotEventSocketHandler(WebSocketHandler):
             logging.warn(str(e))
 
 
+class ShareHandler(RequestHandler):
+
+    def post(self, *args, **kwargs):
+        try:
+            body = json.loads(self.request.body.decode())
+            title = body.get('title', '')
+            url = body.get('url', '')
+            if not url:
+                self.finish({'error': 1, 'msg': '链接为空'})
+                return
+            # 发送给机器人
+            for group_id in BotConfig.SHAREGROUP:
+                try:
+                    BotApiSocketHandler.send_msg({
+                        'group_id': int(group_id),
+                        'message': '{}\n{}'.format(title, url),
+                        'auto_escape': False
+                    })
+                except Exception as e:
+                    logging.warn(str(e))
+            self.finish({'msg': '分享成功'})
+        except Exception as e:
+            self.finish({'error': 1, 'msg': str(e)})
+
+
 class IndexHandler(RequestHandler):
 
     MSGS = []  # 缓存单个消息
@@ -121,6 +146,7 @@ class CQBotApplication(Application):
         handlers = [
             (r'/ws/api/', BotApiSocketHandler),
             (r'/ws/event/', BotEventSocketHandler),
+            (r'/share/', ShareHandler),
             (r'/.*', IndexHandler),
         ]
         super(CQBotApplication, self).__init__(handlers)

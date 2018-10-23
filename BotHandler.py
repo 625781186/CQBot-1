@@ -93,7 +93,6 @@ def do_run_code(user_id, message, code):
     message['message'] = '[CQ:at,qq={}]\n{}'.format(user_id, result)
     return message
 
-
 @coroutine
 def replyMessage(group_id, message):
     """对消息进行处理和回复,如果不回复内容则返回None
