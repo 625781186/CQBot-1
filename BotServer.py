@@ -112,7 +112,7 @@ class ShareHandler(RequestHandler):
                 try:
                     BotApiSocketHandler.send_msg({
                         'group_id': int(group_id),
-                        'message': '{}\n{}'.format(title, url),
+                        'message': '[新文章]{}\n{}'.format(title, url),
                         'auto_escape': False
                     })
                 except Exception as e:
