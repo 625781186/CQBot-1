@@ -93,6 +93,7 @@ def do_run_code(user_id, message, code):
     message['message'] = '[CQ:at,qq={}]\n{}'.format(user_id, result)
     return message
 
+
 @coroutine
 def replyMessage(group_id, message):
     """对消息进行处理和回复,如果不回复内容则返回None
@@ -168,8 +169,8 @@ def replyMessage(group_id, message):
             if not rets:
                 return
             message['message'] = '[CQ:at,qq={}]\n{}' \
-                .format(user_id, '\n'.join(['{}. {}'.format(
-                    i + 1, ret.answer) for i, ret in enumerate(rets)]))
+                .format(user_id, '\n'.join(['{}. Q: {}\n    A: {}'.format(
+                    i + 1, ret.question, ret.answer) for i, ret in enumerate(rets)]))
             return message
         # 添加问题
         elif AddQWMatch.search(msg) and str(user_id) in ADMIN:

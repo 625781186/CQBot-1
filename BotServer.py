@@ -7,7 +7,7 @@ Created on 2018年10月22日
 @site: https://github.com/892768447
 @email: 892768447@qq.com
 @file: botserver
-@description: 
+@description:
 """
 import json
 import logging
@@ -112,7 +112,7 @@ class ShareHandler(RequestHandler):
                 try:
                     BotApiSocketHandler.send_msg({
                         'group_id': int(group_id),
-                        'message': '[新文章]{}\n{}'.format(title, url),
+                        'message': '[新文章] {}\n{}'.format(title, url),
                         'auto_escape': False
                     })
                 except Exception as e:
