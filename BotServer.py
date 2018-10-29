@@ -163,7 +163,7 @@ def initDb(db=None):
 
 def initLog():
     logging.basicConfig(
-        level=logging.DEBUG,
+        level=logging.WARNING,
         format="[%(asctime)s %(name)s %(module)s:%(funcName)s:%(lineno)s] %(levelname)-8s %(message)s")
 
 
