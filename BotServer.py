@@ -17,7 +17,7 @@ from time import time
 from skylark import Database
 from tornado.gen import coroutine
 from tornado.httpserver import HTTPServer
-from tornado.ioloop import IOLoop
+from tornado.ioloop import IOLoop, PeriodicCallback
 from tornado.web import RequestHandler, Application
 from tornado.websocket import WebSocketHandler
 
@@ -140,6 +140,13 @@ class IndexHandler(RequestHandler):
         cls.MSGS.append(message)
 
 
+class killHandler(RequestHandler):
+
+    def get(self, *args, **kwargs):
+        PeriodicCallback(IOLoop.current().stop, 2000).start()
+        self.finish('2秒后退出')
+
+
 class CQBotApplication(Application):
 
     def __init__(self, *args, **kwargs):
@@ -147,6 +154,7 @@ class CQBotApplication(Application):
             (r'/ws/api/', BotApiSocketHandler),
             (r'/ws/event/', BotEventSocketHandler),
             (r'/share/', ShareHandler),
+            (r'/kill/', killHandler),
             (r'/.*', IndexHandler),
         ]
         super(CQBotApplication, self).__init__(handlers)
