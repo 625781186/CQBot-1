@@ -32,7 +32,7 @@ WEBGROUP = {
 
 # 自动分享博客链接到群
 SHAREGROUP = {
-#     '277624735': '我的测试群',
+    #     '277624735': '我的测试群',
     '246269919': 'PyQt 学习',
     '432987409': 'PyQt5小组',
     '592588163': 'PyQt5 开发高级群',
@@ -67,6 +67,7 @@ IgnoreGroup = {
 
 BaiduMatch = re.compile('^百度 (.*)', re.M | re.S)
 GoogleMatch = re.compile('^谷歌 (.*)', re.M | re.S)
+TransMatch = re.compile('^翻译 (.*)', re.M | re.S)
 RunMatch = re.compile('^运行 (.*)', re.M | re.S)
 FindMatch = re.compile('^检索 (.*)', re.M | re.S)
 AddQWMatch = re.compile('^问题:(.*?)答案:(.*)', re.M | re.S)

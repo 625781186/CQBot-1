@@ -23,6 +23,7 @@ from tornado.websocket import WebSocketHandler
 
 import BotConfig
 import BotHandler
+from Translate import Translate
 
 
 __Author__ = """By: Irony
@@ -140,11 +141,21 @@ class IndexHandler(RequestHandler):
         cls.MSGS.append(message)
 
 
-class killHandler(RequestHandler):
+class KillHandler(RequestHandler):
 
     def get(self, *args, **kwargs):
         PeriodicCallback(IOLoop.current().stop, 2000).start()
         self.finish('2秒后退出')
+
+
+class TranslateHandler(RequestHandler):
+
+    @coroutine
+    def get(self, *args, **kwargs):
+        q = self.get_argument('q', 'PyQt5')
+        yield Translate.getSeed()
+        result = yield Translate.translate(q)
+        self.finish(result)
 
 
 class CQBotApplication(Application):
@@ -154,7 +165,8 @@ class CQBotApplication(Application):
             (r'/ws/api/', BotApiSocketHandler),
             (r'/ws/event/', BotEventSocketHandler),
             (r'/share/', ShareHandler),
-            (r'/kill/', killHandler),
+            (r'/kill/', KillHandler),
+            (r'/translate/', TranslateHandler),
             (r'/.*', IndexHandler),
         ]
         super(CQBotApplication, self).__init__(handlers)

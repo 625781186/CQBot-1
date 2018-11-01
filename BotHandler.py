@@ -19,9 +19,11 @@ from tornado.gen import coroutine, Task
 from tornado.httpclient import AsyncHTTPClient
 
 from BotConfig import NoticeGroup, IgnoreGroup, BaiduMatch, GoogleMatch,\
-    RunMatch, QTDocMatch, GitHubMatch, StackMatch, FindMatch, ADMIN, AddQWMatch
+    RunMatch, QTDocMatch, GitHubMatch, StackMatch, FindMatch, ADMIN,\
+    AddQWMatch, TransMatch
 from BotModel import Questions
 from HelpMenu import WelcomeMsg, HelpMenu
+from Translate import Translate
 
 
 __Author__ = """By: Irony
@@ -135,6 +137,13 @@ def replyMessage(group_id, message):
             else:
                 message['message'] = '[CQ:at,qq={}]\nhttp://23.105.222.233:8000/search?&q={}' \
                     .format(user_id, quote(wd))
+            return message
+        # 匹配到翻译
+        elif TransMatch.search(msg):
+            text = msg[3:]
+            Translate.getSeed()
+            message['message'] = '[CQ:at,qq={}]\n{}'.format(
+                user_id, Translate.translate(text))
             return message
         # 执行代码
         elif RunMatch.search(msg):
