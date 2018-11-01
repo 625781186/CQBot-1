@@ -14,7 +14,7 @@ import json
 from math import floor
 import re
 from time import gmtime
-from urllib.parse import quote
+from urllib.parse import urlencode
 
 from tornado.gen import coroutine, Task
 from tornado.httpclient import AsyncHTTPClient
@@ -70,14 +70,40 @@ class Translate:
     def translate(cls, text):
         # 翻译
         client = AsyncHTTPClient()
-        url = 'https://translate.google.cn/translate_a/single?client=t&sl=auto&tl=zh-CN&hl=zh-CN&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=btn&ssel=0&tsel=0&kc=0&tk={}&q={}'
+        body = urlencode({
+            'client': 't',
+            'sl': 'auto',
+            'tl': 'zh-CN',
+            'hl': 'zh-CN',
+            'dt': 'at',
+            'dt': 'bd',
+            'dt': 'ex',
+            'dt': 'ld',
+            'dt': 'md',
+            'dt': 'qca',
+            'dt': 'rw',
+            'dt': 'rm',
+            'dt': 'ss',
+            'dt': 't',
+            'ie': 'UTF-8',
+            'oe': 'UTF-8',
+            'ssel': '3',
+            'tsel': '3',
+            'kc': '0',
+            'tk': cls.getTk(text),
+            'q': text
+        }, safe='()')
+        # ?client=t&sl=auto&tl=zh-CN&hl=zh-CN&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=btn&ssel=0&tsel=0&kc=0&tk={}&q={}'
+        url = 'https://translate.google.cn/translate_a/single'
         resp = yield Task(
             client.fetch,
-            url.format(cls.getTk(text), quote(text)),
-            method='GET',
+            url,
+            method='POST',
+            body=body,
             headers={
                 'Accept': '*/*',
                 'Accept-Language': 'zh-CN,zh;q=0.9',
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
                 'Referer': 'https://translate.google.cn/',
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.26 Safari/537.36 Core/1.63.6735.400 QQBrowser/10.2.2614.400'
             }
@@ -86,7 +112,9 @@ class Translate:
             result = '没有结果'
         else:
             try:
-                result = json.loads(resp.body.decode())[0][0][0]
+                result = ''
+                for ret in json.loads(resp.body.decode())[0]:
+                    result += ret[0]
             except Exception as e:
                 result = '翻译错误: ' + str(e)
 
@@ -158,4 +186,5 @@ if __name__ == '__main__':
     print(_test_seed())
     print(IOLoop.current().run_sync(lambda: Translate.getSeed()))
     print(IOLoop.current().run_sync(lambda: Translate.getSeed()))
-    print(IOLoop.current().run_sync(lambda: Translate.translate('Hello PyQt5')))
+    print(IOLoop.current().run_sync(lambda: Translate.translate(
+        'Non-window widgets are child widgets, displayed within their parent widgets. Most widgets in Qt are mainly useful as child widgets. For example, it is possible to display a button as a top-level window, but most people prefer to put their buttons inside other widgets, such as QDialog.')))
