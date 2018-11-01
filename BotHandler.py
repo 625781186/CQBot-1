@@ -141,9 +141,10 @@ def replyMessage(group_id, message):
         # 匹配到翻译
         elif TransMatch.search(msg):
             text = msg[3:]
-            Translate.getSeed()
+            yield Translate.getSeed()
+            result = yield Translate.translate(text)
             message['message'] = '[CQ:at,qq={}]\n{}'.format(
-                user_id, Translate.translate(text))
+                user_id, result)
             return message
         # 执行代码
         elif RunMatch.search(msg):
