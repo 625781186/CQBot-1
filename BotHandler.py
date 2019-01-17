@@ -19,11 +19,9 @@ from tornado.gen import coroutine, Task
 from tornado.httpclient import AsyncHTTPClient
 
 from BotConfig import NoticeGroup, IgnoreGroup, BaiduMatch, GoogleMatch,\
-    RunMatch, QTDocMatch, GitHubMatch, StackMatch, FindMatch, ADMIN,\
-    AddQWMatch, TransMatch
+    RunMatch, QTDocMatch, GitHubMatch, StackMatch, FindMatch, ADMIN, AddQWMatch
 from BotModel import Questions
 from HelpMenu import WelcomeMsg, HelpMenu
-from Translate import Translate
 
 
 __Author__ = """By: Irony
@@ -37,10 +35,12 @@ def msgFilter(message):
     # 对消息进行过滤
     msg = message.get('message', '')
     # 替换图片链接
+#     msg = re.sub('\[CQ:.*?,url=(.*?)\]',
+#                  lambda m: '<a target="_blank" href="' +
+#                  m.group(1) + '">', msg)
     msg = re.sub('\[CQ:.*?,url=(.*?)\]',
-                 lambda m: '<a target="_blank" href="' +
-                 m.group(1) + '">', msg)
-    # 替换酷Q码
+                 lambda m: '[图片消息]', msg)
+    # 替换酷Q码为空
     msg = re.sub('\[CQ:.*\]', '', msg, flags=re.S | re.M)
     if not msg:
         return
@@ -95,7 +95,6 @@ def do_run_code(user_id, message, code):
     message['message'] = '[CQ:at,qq={}]\n{}'.format(user_id, result)
     return message
 
-
 @coroutine
 def replyMessage(group_id, message):
     """对消息进行处理和回复,如果不回复内容则返回None
@@ -138,14 +137,6 @@ def replyMessage(group_id, message):
                 message['message'] = '[CQ:at,qq={}]\nhttp://23.105.222.233:8000/search?&q={}' \
                     .format(user_id, quote(wd))
             return message
-        # 匹配到翻译
-        elif TransMatch.search(msg):
-            text = msg[3:]
-            yield Translate.getSeed()
-            result = yield Translate.translate(text)
-            message['message'] = '[CQ:at,qq={}]\n{}'.format(
-                user_id, result)
-            return message
         # 执行代码
         elif RunMatch.search(msg):
             code = msg[3:]
@@ -179,8 +170,8 @@ def replyMessage(group_id, message):
             if not rets:
                 return
             message['message'] = '[CQ:at,qq={}]\n{}' \
-                .format(user_id, '\n'.join(['{}. Q: {}\n    A: {}'.format(
-                    i + 1, ret.question, ret.answer) for i, ret in enumerate(rets)]))
+                .format(user_id, '\n'.join(['{}. {}'.format(
+                    i + 1, ret.answer) for i, ret in enumerate(rets)]))
             return message
         # 添加问题
         elif AddQWMatch.search(msg) and str(user_id) in ADMIN:
