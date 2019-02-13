@@ -123,7 +123,7 @@ def replyMessage(group_id, message):
         elif BaiduMatch.search(msg):
             wd = msg[3:]
             logging.debug('百度搜索: {}'.format(wd))
-            message['message'] = '[CQ:at,qq={}]\nhttp://www.baidu.com/s?ie=utf8&oe=utf8&wd={}' \
+            message['message'] = '[CQ:at,qq={}]\nhttps://pyqt5.com/search.php?m=baidu&w={}' \
                 .format(user_id, quote(wd))
             return message
         # 匹配到谷歌搜索
@@ -131,10 +131,10 @@ def replyMessage(group_id, message):
             wd = msg[3:]
             logging.debug('谷歌搜索: {}'.format(wd))
             if str(group_id) == '592588163':
-                message['message'] = '[CQ:at,qq={}]\nhttp://www.google.com/search?&q={}' \
+                message['message'] = '[CQ:at,qq={}]\nhttps://pyqt5.com/search.php?m=google&w={}' \
                     .format(user_id, quote(wd))
             else:
-                message['message'] = '[CQ:at,qq={}]\nhttp://23.105.222.233:8000/search?&q={}' \
+                message['message'] = '[CQ:at,qq={}]\nhttps://pyqt5.com/search.php?m=google&w={}' \
                     .format(user_id, quote(wd))
             return message
         # 执行代码
