@@ -190,6 +190,8 @@ def replyMessage(group_id, message):
             urls = ImageSearch.findall(msg)
             print('find urls: ', urls)
             for url in urls:
-                if SexImageCheck.check(url) == 1:
-                    message['message'] = ' ⃢ܫ⃢ 报告: 发现一张色情图!!! ⃢ܫ⃢ '
+                ret = SexImageCheck.check(url)
+                if ret == 1:
+                    message['message'] = '报告: 发现一张色情图!!!'
+                    print(message)
                     return message
