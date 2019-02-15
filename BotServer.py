@@ -11,10 +11,10 @@ Created on 2018年10月22日
 """
 import json
 import logging
+import os
 import sqlite3
 from time import time
 
-from skylark import Database
 from tornado.gen import coroutine
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop, PeriodicCallback
@@ -23,8 +23,9 @@ from tornado.websocket import WebSocketHandler
 
 import BotConfig
 import BotHandler
-from Translate import Translate
 from SexImageCheck import SexImageCheck
+from Translate import Translate
+from skylark import Database
 
 
 __Author__ = """By: Irony
@@ -189,6 +190,7 @@ def initLog():
 
 
 def main(port=9898):
+    os.makedirs('images', exist_ok=True)
     initLog()
     initDb('data.db')
     SexImageCheck.init()

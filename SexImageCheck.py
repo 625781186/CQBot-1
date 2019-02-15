@@ -9,12 +9,15 @@ Created on 2019年2月15日
 @file: SexImageCheck
 @description: 色情图片鉴别
 """
+import base64
 import hashlib
+import io
 import json
 import os
 from time import time
 from urllib.parse import quote, urlencode
 
+from PIL import Image
 from tornado.gen import coroutine, Task
 from tornado.httpclient import AsyncHTTPClient
 
@@ -74,11 +77,38 @@ class SexImageCheck:
             print('appid or appkey is null')
             return 0
         print('check url: ', path)
+
+        # 先下载图片
+        client = AsyncHTTPClient()
+        resp = yield Task(
+            client.fetch,
+            path,
+            method='GET'
+        )
+        if not resp.body:
+            print('check image, can not download image')
+            return 0
+        body = io.BytesIO(resp.body)
+        with Image.open(body) as img:
+            if len(resp.body) > 1000000:
+                # 先保存
+                name = 'images/' + hashlib.md5(os.urandom(6)).hexdigest() + \
+                    '.' + img.format.lower()
+                img.save(name, img.format, quality=10)
+                image = base64.b64encode(open(name, 'rb').read()).decode()
+                try:
+                    os.unlink(name)
+                except:
+                    pass
+            else:
+                # 小图片直接base64编码
+                image = base64.b64encode(resp.body).decode()
+
         params = {
             'app_id': SexImageCheck.APPID,
             # 原始图片的base64编码数据（原图大小上限1MB，支持JPG、PNG、BMP格式），image和image_url必须至少提供一个
-            #     'image': base64.b64encode(open('324118.jpg', 'rb').read()).decode(),
-            'image_url': path,  # 如果image和image_url都提供，仅支持image_url，image和image_url必须至少提供一个
+            'image': image,
+            #             'image_url': path,  # 如果image和image_url都提供，仅支持image_url，image和image_url必须至少提供一个
             'nonce_str': hashlib.md5(os.urandom(32)).hexdigest(),  # 32长度随机字符串
             'sign': '',  # 32长度签名信息
             'time_stamp': str(time()).replace('.', '')[:10],  # 请求时间戳（秒级）
