@@ -191,7 +191,7 @@ def replyMessage(group_id, message):
             print('find urls: ', urls)
             for url in urls:
                 url = url.replace('&amp;', '&')
-                ret = SexImageCheck.check(url)
+                ret = yield SexImageCheck.check(url)
                 if ret == 1:
                     message['message'] = '报告: 发现一张色情图!!!'
                     print(message)
