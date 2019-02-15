@@ -76,7 +76,7 @@ class SexImageCheck:
         if not SexImageCheck.APPID or not SexImageCheck.APPKEY:
             print('appid or appkey is null')
             return 0
-        print('check url: ', path)
+#         print('check url: ', path)
 
         # 先下载图片
         client = AsyncHTTPClient()
@@ -127,7 +127,7 @@ class SexImageCheck:
             return 0
         try:
             infos = json.loads(resp.body.decode())
-            print(infos)
+#             print(infos)
             if infos.get('ret', -1) == 0:
                 normal = 0
                 hot = 0
