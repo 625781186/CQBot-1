@@ -20,10 +20,11 @@ from tornado.httpclient import AsyncHTTPClient
 
 from BotConfig import NoticeGroup, IgnoreGroup, BaiduMatch, GoogleMatch,\
     RunMatch, QTDocMatch, GitHubMatch, StackMatch, FindMatch, ADMIN, AddQWMatch,\
-    ImageSearch
+    ImageSearch, TransMatch
 from BotModel import Questions
 from HelpMenu import WelcomeMsg, HelpMenu
 from SexImageCheck import SexImageCheck
+from Translate import Translate
 
 
 __Author__ = """By: Irony
@@ -140,6 +141,14 @@ def replyMessage(group_id, message):
                 message['message'] = '[CQ:at,qq={}]\nhttps://pyqt5.com/search.php?m=google&w={}' \
                     .format(user_id, quote(wd))
             return message
+        # 匹配到翻译
+        elif TransMatch.search(msg):
+            text = msg[3:]
+            yield Translate.getSeed()
+            result = yield Translate.translate(text)
+            message['message'] = '[CQ:at,qq={}]\n{}'.format(
+                user_id, result)
+            return message
         # 执行代码
         elif RunMatch.search(msg):
             code = msg[3:]
@@ -189,10 +198,13 @@ def replyMessage(group_id, message):
         elif ImageSearch.search(msg):
             urls = ImageSearch.findall(msg)
             print('find urls: ', urls)
-            for url in urls:
-                url = url.replace('&amp;', '&')
+#             for url in urls:
+#                 url = url.replace('&amp;', '&')
+#                 ret = yield SexImageCheck.check(url)
+            if urls:
+                url = urls[0].replace('&amp;', '&')
                 ret = yield SexImageCheck.check(url)
+                print(ret)
                 if ret == 1:
                     message['message'] = '报告: 发现一张色情图!!!'
-                    print(message)
                     return message
