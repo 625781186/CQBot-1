@@ -73,6 +73,7 @@ class SexImageCheck:
         if not SexImageCheck.APPID or not SexImageCheck.APPKEY:
             print('appid or appkey is null')
             return 0
+        print('check url: ', path)
         params = {
             'app_id': SexImageCheck.APPID,
             # 原始图片的base64编码数据（原图大小上限1MB，支持JPG、PNG、BMP格式），image和image_url必须至少提供一个
