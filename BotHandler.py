@@ -19,9 +19,11 @@ from tornado.gen import coroutine, Task
 from tornado.httpclient import AsyncHTTPClient
 
 from BotConfig import NoticeGroup, IgnoreGroup, BaiduMatch, GoogleMatch,\
-    RunMatch, QTDocMatch, GitHubMatch, StackMatch, FindMatch, ADMIN, AddQWMatch
+    RunMatch, QTDocMatch, GitHubMatch, StackMatch, FindMatch, ADMIN, AddQWMatch,\
+    ImageSearch
 from BotModel import Questions
 from HelpMenu import WelcomeMsg, HelpMenu
+from SexImageCheck import SexImageCheck
 
 
 __Author__ = """By: Irony
@@ -94,6 +96,7 @@ def do_run_code(user_id, message, code):
             result = '运行错误: ' + str(e)
     message['message'] = '[CQ:at,qq={}]\n{}'.format(user_id, result)
     return message
+
 
 @coroutine
 def replyMessage(group_id, message):
@@ -182,3 +185,11 @@ def replyMessage(group_id, message):
                 return message
             except Exception as e:
                 logging.warn(str(e))
+        # 图片
+        elif ImageSearch.search(msg):
+            urls = ImageSearch.findall(msg)
+            print('find urls: ', urls)
+            for url in urls:
+                if SexImageCheck.check(url) == 1:
+                    message['message'] = ' ⃢ܫ⃢ 报告: 发现一张色情图!!! ⃢ܫ⃢ '
+                    return message

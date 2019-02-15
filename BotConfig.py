@@ -77,3 +77,6 @@ BaiduResult = re.compile(
 QTDocMatch = re.compile('^-f (.*)', re.M | re.S)
 GitHubMatch = re.compile('^-g (.*)', re.M | re.S)
 StackMatch = re.compile('^-s (.*)', re.M | re.S)
+
+# 图片消息
+ImageSearch = re.compile('\[CQ:.*?,url=(.*?)\]', re.M | re.S)

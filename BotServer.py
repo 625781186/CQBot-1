@@ -24,6 +24,7 @@ from tornado.websocket import WebSocketHandler
 import BotConfig
 import BotHandler
 from Translate import Translate
+from SexImageCheck import SexImageCheck
 
 
 __Author__ = """By: Irony
@@ -190,6 +191,7 @@ def initLog():
 def main(port=9898):
     initLog()
     initDb('data.db')
+    SexImageCheck.init()
     server = HTTPServer(CQBotApplication())
     server.listen(port)
     IOLoop.current().start()
