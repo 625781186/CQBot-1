@@ -141,14 +141,14 @@ def replyMessage(group_id, message):
                 message['message'] = '[CQ:at,qq={}]\nhttps://pyqt5.com/search.php?m=google&w={}' \
                     .format(user_id, quote(wd))
             return message
-        # 匹配到翻译
-        elif TransMatch.search(msg):
-            text = msg[3:]
-            yield Translate.getSeed()
-            result = yield Translate.translate(text)
-            message['message'] = '[CQ:at,qq={}]\n{}'.format(
-                user_id, result)
-            return message
+#         # 匹配到翻译
+#         elif TransMatch.search(msg):
+#             text = msg[3:]
+#             yield Translate.getSeed()
+#             result = yield Translate.translate(text)
+#             message['message'] = '[CQ:at,qq={}]\n{}'.format(
+#                 user_id, result)
+#             return message
         # 执行代码
         elif RunMatch.search(msg):
             code = msg[3:]
@@ -204,7 +204,6 @@ def replyMessage(group_id, message):
             if urls:
                 url = urls[0].replace('&amp;', '&')
                 ret = yield SexImageCheck.check(url)
-                print(ret)
                 if ret == 1:
                     message['message'] = '报告: 发现一张色情图!!!'
                     return message

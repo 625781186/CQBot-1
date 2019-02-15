@@ -97,22 +97,24 @@ class SexImageCheck:
             return 0
         try:
             infos = json.loads(resp.body.decode())
+            print(infos)
+            if infos.get('ret', -1) == 0:
+                normal = 0
+                hot = 0
+                tag_list = infos.get('data', {}).get('tag_list', [])
+                for item in tag_list:
+                    if item.get('tag_name', '') == 'normal':
+                        normal = item.get('tag_confidence', 0)
+                    elif item.get('tag_name', '') == 'hot':
+                        hot = item.get('tag_confidence', 0)
+                if hot > normal:
+                    print('sex image: ', path)
+                    return 1
+                else:
+                    return 0
         except Exception as e:
             print('check image return error:', e)
             return 0
-#         print(infos)
-        if infos.get('ret', -1) == 0:
-            normal = 0
-            hot = 0
-            tag_list = infos.get('data', {}).get('tag_list', [])
-            for item in tag_list:
-                if item.get('tag_name', '') == 'normal':
-                    normal = item.get('tag_confidence', 0)
-                elif item.get('tag_name', '') == 'hot':
-                    hot = item.get('tag_confidence', 0)
-            if hot > normal:
-                print('sex image: ', path)
-                return 1
         return 0
 
 
