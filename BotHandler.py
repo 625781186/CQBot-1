@@ -204,5 +204,6 @@ def replyMessage(group_id, message):
                 url = urls[0].replace('&amp;', '&')
                 ret = yield SexImageCheck.check(url)
                 if ret == 1:
-                    message['message'] = '[CQ:emoji,id=10060][CQ:emoji,id=10060]发现一张色情图[CQ:emoji,id=11093][CQ:emoji,id=11093]'
+                    message['message'] = '[CQ:at,qq={}]\n[CQ:emoji,id=10060][CQ:emoji,id=10060]你小子敢发色情图[CQ:emoji,id=11093][CQ:emoji,id=11093]'.format(
+                        user_id)
                     return message
