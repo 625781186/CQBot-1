@@ -99,6 +99,7 @@ class SexImageCheck:
         except Exception as e:
             print('check image return error:', e)
             return 0
+        print(infos)
         if infos.get('ret', -1) == 0:
             normal = 0
             hot = 0
