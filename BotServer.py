@@ -23,7 +23,7 @@ from tornado.websocket import WebSocketHandler
 
 import BotConfig
 import BotHandler
-from SexImageCheck import SexImageCheck
+from Extratools import SexImageCheck
 from Translate import Translate
 from skylark import Database
 
