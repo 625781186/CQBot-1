@@ -81,3 +81,6 @@ StackMatch = re.compile('^-s (.*)', re.M | re.S)
 
 # 图片消息
 ImageSearch = re.compile('\[CQ:.*?,url=(.*?)\]', re.M | re.S)
+
+# 表情包
+EmoticonSearch = re.compile('^bq (.*)', re.M | re.S)

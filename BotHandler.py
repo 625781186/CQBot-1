@@ -20,10 +20,10 @@ from tornado.httpclient import AsyncHTTPClient
 
 from BotConfig import NoticeGroup, IgnoreGroup, BaiduMatch, GoogleMatch,\
     RunMatch, QTDocMatch, GitHubMatch, StackMatch, FindMatch, ADMIN, AddQWMatch,\
-    ImageSearch
+    ImageSearch, EmoticonSearch
 from BotModel import Questions
+from Extratools import getDouTu, SexImageCheck
 from HelpMenu import WelcomeMsg, HelpMenu
-from SexImageCheck import SexImageCheck
 
 
 __Author__ = """By: Irony
@@ -193,13 +193,20 @@ def replyMessage(group_id, message):
                 return message
             except Exception as e:
                 logging.warn(str(e))
+        # 斗图表情
+        elif EmoticonSearch.search(msg):
+            key = msg[3:]  # 后面有关键词
+            url = yield getDouTu(key)
+            if url:
+                message['message'] = '[CQ:image,file=]'.format(url)
+                return message
         # 图片
         elif ImageSearch.search(msg):
             urls = ImageSearch.findall(msg)
-            print('find urls: ', urls)
+#             print('find urls: ', urls)
 #             for url in urls:
 #                 url = url.replace('&amp;', '&')
-#                 ret = yield SexImageCheck.check(url)
+#                 ret = yield Extratools.check(url)
             if urls:
                 url = urls[0].replace('&amp;', '&')
                 ret = yield SexImageCheck.check(url)

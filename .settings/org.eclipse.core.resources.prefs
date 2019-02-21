@@ -3,6 +3,6 @@ encoding/BotConfig.py=utf-8
 encoding/BotHandler.py=utf-8
 encoding/BotModel.py=utf-8
 encoding/BotServer.py=utf-8
+encoding/Extratools.py=utf-8
 encoding/HelpMenu.py=utf8
-encoding/SexImageCheck.py=utf-8
 encoding/Translate.py=utf-8

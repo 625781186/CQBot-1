@@ -6,14 +6,15 @@ Created on 2019年2月15日
 @author: Irony
 @site: https://pyqt5.com https://github.com/892768447
 @email: 892768447@qq.com
-@file: SexImageCheck
-@description: 色情图片鉴别
+@file: Extratools
+@description: 额外工具类,色情图片鉴别,斗图
 """
 import base64
 import hashlib
 import io
 import json
 import os
+from random import choice
 from time import time
 from urllib.parse import quote, urlencode
 
@@ -29,6 +30,39 @@ __Copyright__ = 'Copyright (c) 2019 Irony'
 __Version__ = 1.0
 
 url_vision_porn = 'https://api.ai.qq.com/fcgi-bin/vision/vision_porn'
+
+url_doutu = 'http://tugele.mse.sogou.com/query?flag_time={flag_time}&h=ffffffff-d25b-cfdd-ffff-ffff990f5542&v=android8.28.1&ip=&pv=android5.1.1&aid=00f1f3b60d691050&dpi=240&key={key}&sdk=1.10&imei=863254010002417&imsi=460070024124318&page={page}&brand=MI+6+'
+
+
+@coroutine
+def getDouTu(key):
+    """斗图
+    :param key:
+    """
+    client = AsyncHTTPClient()
+    resp = yield Task(
+        client.fetch,
+        url_doutu.format(flag_time=time(), key=key, page=1),
+        method='GET',
+    )
+    if not resp.body:
+        print('no body')
+        return ''
+    try:
+        infos = json.loads(resp.body.decode())
+    except Exception as e:
+        print(e)
+        return ''
+
+#     print(infos)
+
+    datas = infos.get('data', [])
+    if len(datas) == 0:
+        return ''
+    # 随机一个
+    item = choice(datas)
+#     print(item.get('yuntuUrl', ''))
+    return item.get('yuntuUrl', '')
 
 
 class SexImageCheck:
